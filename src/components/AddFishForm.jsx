@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 
 class AddFishForm extends Component {
+  setFishForm = input => {
+    this.fishForm = input;
+  };
+
   setName = input => {
     this.name = input;
   };
@@ -28,12 +32,14 @@ class AddFishForm extends Component {
       description: this.description.value,
       image: this.image.value,
     };
+
     addFish(fish);
+    this.fishForm.reset();
   };
 
   render() {
     return (
-      <form className="fish-edit" onSubmit={this.createFish}>
+      <form ref={this.setFishForm} className="fish-edit" onSubmit={this.createFish}>
         <input ref={this.setName} type="text" placeholder="Fish Name" />
         <input ref={this.setPrice} type="text" placeholder="Fish Price" />
         <select ref={this.setStatus}>
