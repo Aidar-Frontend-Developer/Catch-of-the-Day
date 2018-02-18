@@ -4,6 +4,7 @@ import Order from './Order';
 import Inventory from './Inventory';
 import Fish from './Fish';
 import sampleFishes from '../sample-fishes';
+import base from '../base';
 
 class App extends Component {
   constructor() {
@@ -12,6 +13,29 @@ class App extends Component {
       fishes: {},
       order: {},
     };
+  }
+
+  componentWillMount() {
+    this.ref = base.syncState(`${this.props.params.storeId}/fishes`, {
+      context: this,
+      state: 'fishes',
+    });
+
+    // check if there is any order in localStorage
+    const localStorageRef = localStorage.getItem(`order-${this.props.params.storeId}`);
+
+    if (localStorageRef) {
+      // update out App component's order state
+      this.setState({order: JSON.parse(localStorageRef)});
+    }
+  }
+
+  componentWillUnmount() {
+    base.removeBinding(this.ref);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    localStorage.setItem(`order-${this.props.params.storeId}`, JSON.stringify(nextState.order));
   }
 
   addFish = fish => {
@@ -24,8 +48,20 @@ class App extends Component {
     this.setState({fishes});
   };
 
+  updateFish = (key, updatedFish) => {
+    const fishes = {...this.state.fishes};
+    fishes[key] = updatedFish;
+    this.setState({fishes});
+  };
+
   loadSamples = () => {
     this.setState({fishes: sampleFishes});
+  };
+
+  removeFish = key => {
+    const fishes = {...this.state.fishes};
+    fishes[key] = null;
+    this.setState({fishes});
   };
 
   addToOrder = key => {
@@ -34,6 +70,12 @@ class App extends Component {
     // update or add the new number of fish ordered
     order[key] = order[key] + 1 || 1;
     // update our state
+    this.setState({order});
+  };
+
+  removeFromOrder = key => {
+    const order = {...this.state.order};
+    delete order[key];
     this.setState({order});
   };
 
@@ -49,11 +91,21 @@ class App extends Component {
             ))}
           </ul>
         </div>
-        <Order fishes={fishes} order={order} />
-        <Inventory addFish={this.addFish} loadSamples={this.loadSamples} />
+        <Order fishes={fishes} params={this.props.params} order={order} removeFromOrder={this.removeFromOrder} />
+        <Inventory
+          removeFish={this.removeFish}
+          fishes={fishes}
+          addFish={this.addFish}
+          loadSamples={this.loadSamples}
+          updateFish={this.updateFish}
+        />
       </div>
     );
   }
 }
+
+App.propTypes = {
+  params: React.PropTypes.object.isRequired,
+};
 
 export default App;

@@ -8,15 +8,19 @@ class AddFishForm extends Component {
   setName = input => {
     this.name = input;
   };
+
   setPrice = input => {
     this.price = input;
   };
+
   setStatus = input => {
     this.status = input;
   };
+
   setDescription = input => {
     this.description = input;
   };
+
   setImage = input => {
     this.image = input;
   };
@@ -53,5 +57,9 @@ class AddFishForm extends Component {
     );
   }
 }
+
+AddFishForm.propTypes = {
+  addFish: React.PropTypes.func.isRequired,
+};
 
 export default AddFishForm;
