@@ -48,6 +48,7 @@ class Order extends Component {
       }
       return prevTotal;
     }, 0);
+
     return (
       <div className="order-wrap">
         <h2>Your order</h2>
@@ -67,12 +68,11 @@ class Order extends Component {
       </div>
     );
   }
+  static propTypes = {
+    fishes: React.PropTypes.object.isRequired,
+    order: React.PropTypes.object.isRequired,
+    removeFromOrder: React.PropTypes.func.isRequired,
+  };
 }
-
-Order.propTypes = {
-  fishes: React.PropTypes.object.isRequired,
-  order: React.PropTypes.object.isRequired,
-  removeFromOrder: React.PropTypes.func.isRequired,
-};
 
 export default Order;

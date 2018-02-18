@@ -7,13 +7,10 @@ import sampleFishes from '../sample-fishes';
 import base from '../base';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      fishes: {},
-      order: {},
-    };
-  }
+  state = {
+    fishes: {},
+    order: {},
+  };
 
   componentWillMount() {
     this.ref = base.syncState(`${this.props.params.storeId}/fishes`, {
@@ -103,10 +100,9 @@ class App extends Component {
       </div>
     );
   }
+  static propTypes = {
+    params: React.PropTypes.object.isRequired,
+  };
 }
-
-App.propTypes = {
-  params: React.PropTypes.object.isRequired,
-};
 
 export default App;
